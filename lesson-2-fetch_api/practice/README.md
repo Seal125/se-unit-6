@@ -7,38 +7,41 @@ Respond to written responses directly in this markdown file. Use `practice.js` f
   `'https://itunes.apple.com/search?artist=Janelle%20Monáe'`
  - The query string starts where there's a question mark, where you input a specific artist. It comes in handy when you're looking for something specific in a webpage. It also comes in handy as a shortcut.
 
-**2. Reference the code snippet below. Why would an engineer decide to create the higher order function `sendHttpRequest()` and then invoke it within `getData()` and `sendData()`?
+**2. Reference the code snippet below. Why would an engineer decide to create the higher order function `sendHttpRequest()` and then invoke it within `getData()` and `sendData()`?**
 
-	```javascript
-	const sendHttpRequest = (method, url, data) => {
-		return fetch(url, {
-			method: method,
-			body: JSON.stringify(data),
-			/*Read more about the conditional operator below (condtion ? expressionA : expression B) via MDN documenation*/
-			headers: data ? { 'Content-Type': 'application/json' } : {}
-		}).then(response => {
-			if (response.status >= 400) {
-				// !response.ok
-				return response.json().then(errResData => {
-					const error = new Error('Something went wrong!');
-					error.data = errResData;
-					throw error;
-				});
-			}
-			return response.json();
-		});
-	};
+```javascript
+const sendHttpRequest = (method, url, data) => {
+	return fetch(url, {
+		method: method,
+		body: JSON.stringify(data),
+		/*Read more about the conditional operator below (condtion ? expressionA : expression B) via MDN documenation*/
+		headers: data ? { 'Content-Type': 'application/json' } : {}
+	}).then(response => {
+		if (response.status >= 400) {
+			// !response.ok
+			return response.json().then(errResData => {
+				const error = new Error('Something went wrong!');
+				error.data = errResData;
+				throw error;
+			});
+		}
+		return response.json();
+	});
+};
 
-	const getData = () => {
-		sendHttpRequest('GET', 'https://reqres.in/api/users').then(responseData => {
+const getData = () => {
+	sendHttpRequest('GET', 'https://reqres.in/api/users').then(responseData => {
+		console.log(responseData);
+	});
+};
+
+const sendData = () => {
+	sendHttpRequest('POST', 'https://reqres.in/api/register', {
+		email: 'eve.holt@reqres.in'
+		password: 'pistol'
+	})
+		.then(responseData => {
 			console.log(responseData);
-		});
-	};
-
-	const sendData = () => {
-		sendHttpRequest('POST', 'https://reqres.in/api/register', {
-			email: 'eve.holt@reqres.in'
-			password: 'pistol'
 		})
 			.then(responseData => {
 				console.log(responseData);
@@ -51,6 +54,13 @@ Respond to written responses directly in this markdown file. Use `practice.js` f
 - It looks like it's a helpful way to keep track of what exactly you're doing with the information. Whether you're getting or posting information, the function makes it clear what you intend to do with it, where it goes or comes from, and you can specify the data if you want as well, otherwise it will post or get that information. It also does checks for the data types, and has responses for resolves and rejections.
 
 //sets it up so you can do it once, DRY
+
+		.catch(err => {
+			console.log(err, err.data);
+		});
+};
+```
+>>>>>>> e77ddda2463c16b6e50c5188cae7efb88756b066
 
 **3. Reference the code snippet in Exercise #2. What is the purpose of conditionally rendering the headers key value within the `fetch` call in the `sendHttpRequest()` function?**
 - To make sure that the data exists, if you were to post something. If you're using get, then it will not return any data.
