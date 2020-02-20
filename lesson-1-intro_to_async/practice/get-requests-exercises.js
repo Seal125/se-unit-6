@@ -22,7 +22,7 @@
  */
 
 const response1 = `
-    Write youre response here.
+
  `;
 
 /**
@@ -50,7 +50,16 @@ const response1 = `
  * response object.
  */
 
-const logUsers = null; //Replace null with your solution code to exercise 2
+const getUsers = (number) => {
+  const getData = fetch(`https://randomuser.me/api/?results=${number}`)
+    .then(response => response.json())
+    .then(data => data.results)
+};
+
+const logUsers = () => {
+  getUsers()
+    .then(data => console.log(data.results));
+};
 
 /**
  * Exercise 3:
@@ -61,7 +70,12 @@ const logUsers = null; //Replace null with your solution code to exercise 2
  * 2. number each of the names from 1-10.
  */
 
-const listTenNames = null; //Replace null with your solution code to exercise 3
+const listTenNames = () => {
+  getUsers(10)
+    .then(data => data.forEach((user, ind) => {
+      console.log(`${ind + 1}. ${user.name.first}`);
+    }));
+};
 
 /**
  * Exercise 4:
@@ -94,7 +108,41 @@ const createPhoneBook = null; //Replace null with your solution code to exercise
  * with multiple parameters
  */
 
-const createPhotoAlbum = null; //Replace null with your solution code to exercise 5
+async function createPhotoAlbum(gender, nationality) {
+  const response = await fetch(`https://randomuser.me/api/?results=10&gender=${gender}&nat=${nationality}`);
+  const json = await response.json();
+  const data = await json.results;
+  const main = document.getElementById('main');
+
+  const table = data.map(user => {
+    let name = `${user.name.first} ${user.name.last}`;
+    let photo = `${user.picture.medium}`;
+
+    return `
+    <tr>
+      <td>${name}</td>
+      <td>
+        <img src="${photo}">
+      </td>
+    </tr>
+    `;
+  }).join('');
+
+  main.innerHTML = `
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Photo</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      ${table}
+    </tbody>
+  </table>
+  `;
+}
 
 /**
  * For exercises 6-7, use the `Joke API` and
@@ -102,7 +150,7 @@ const createPhotoAlbum = null; //Replace null with your solution code to exercis
  *
  * TIPS:
  * 1) Read the documentation for the  `Joke API`:
- * https://sv443.net/jokeapi/v2#endpoints.
+ * https: //sv443.net/jokeapi/v2#endpoints.
  *
  */
 
@@ -115,7 +163,11 @@ const createPhotoAlbum = null; //Replace null with your solution code to exercis
  * 2) log the setup and delivery of the joke on separate lines
  */
 
-const logAJoke = null; //Replace null with your solution code to exercise 6
+const logAJoke = () => {
+  const getData = fetch('https://sv443.net/jokeapi/v2/joke/Programming?type=twopart')
+  getData.then(response => response.json())
+    .then(joke => console.log(`${joke.setup}\n${joke.delivery}`))
+}
 
 /**
  * Exercise 7:
